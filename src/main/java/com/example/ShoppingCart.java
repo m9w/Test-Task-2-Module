@@ -13,18 +13,6 @@ public class ShoppingCart {
     private static final NumberFormat MONEY = new DecimalFormat("$#.00", new DecimalFormatSymbols(Locale.ENGLISH));
 
     /**
-     * Tests all class methods.
-     */
-    public static void main(String[] args){
-        // TODO: add tests here
-        ShoppingCart cart = new ShoppingCart();
-        cart.addItem("Apple", 0.99, 5, ItemType.NEW);
-        cart.addItem("Banana", 20.00, 4, ItemType.SECOND_FREE);
-        cart.addItem("A long piece of toilet paper", 17.20, 1, ItemType.SALE);
-        cart.addItem("Nails", 2.00, 500, ItemType.REGULAR);
-        System.out.println(cart.formatTicket());
-    }
-    /**
      * Adds new item.
      *
      * @param title item title 1 to 32 symbols
