@@ -153,7 +153,7 @@ public class ShoppingCart {
         discount += quantity / 10;
         return Math.min(discount, 80);
     }
-    /** item info */
+
     private static class Item{
         String title;
         double price;
