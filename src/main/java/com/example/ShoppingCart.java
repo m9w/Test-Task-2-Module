@@ -16,7 +16,7 @@ public class ShoppingCart {
      * Adds new item.
      *
      * @param title item title 1 to 32 symbols
-     * @param price item ptice in USD, > 0
+     * @param price item price in USD, > 0
      * @param quantity item quantity, from 1
      * @param type item type
      *
@@ -54,9 +54,8 @@ public class ShoppingCart {
      * if no items in cart returns "No items." string.
      */
     public String formatTicket(){
-        if (items.size() == 0)
-            return "No items.";
-        List<String[]> lines = new ArrayList<String[]>();
+        if (items.size() == 0) return "No items.";
+        List<String[]> lines = new ArrayList<>();
         String[] header = {"#","Item","Price","Quan.","Discount","Total"};
         int[] align = new int[] { 1, -1, 1, 1, 1, 1 };
         // formatting each line
@@ -70,7 +69,7 @@ public class ShoppingCart {
                     item.title,
                     MONEY.format(item.price),
                     String.valueOf(item.quantity),
-                    (discount == 0) ? "-" : (String.valueOf(discount) + "%"),
+                    (discount == 0) ? "-" : (discount + "%"),
                     MONEY.format(itemTotal)
             });
             total += itemTotal;
@@ -81,36 +80,29 @@ public class ShoppingCart {
         int[] width = new int[]{0,0,0,0,0,0};
         for (String[] line : lines)
             for (int i = 0; i < line.length; i++)
-                width[i] = (int) Math.max(width[i], line[i].length());
+                width[i] = Math.max(width[i], line[i].length());
         for (int i = 0; i < header.length; i++)
-            width[i] = (int) Math.max(width[i], header[i].length());
+            width[i] = Math.max(width[i], header[i].length());
         for (int i = 0; i < footer.length; i++)
-            width[i] = (int) Math.max(width[i], footer[i].length());
+            width[i] = Math.max(width[i], footer[i].length());
         // line length
-        int lineLength = width.length - 1;
-        for (int w : width)
-            lineLength += w;
+        int lineLength = width.length - 1 + Arrays.stream(width).sum();
         StringBuilder sb = new StringBuilder();
         // header
         for (int i = 0; i < header.length; i++)
             appendFormatted(sb, header[i], align[i], width[i]);
         sb.append("\n");
         // separator
-        for (int i = 0; i < lineLength; i++)
-            sb.append("-");
-        sb.append("\n");
+        sb.append("-".repeat(lineLength)).append("\n");
         // lines
         for (String[] line : lines) {
             for (int i = 0; i < line.length; i++)
                 appendFormatted(sb, line[i], align[i], width[i]);
             sb.append("\n");
         }
-        if (lines.size() > 0) {
-            // separator
-            for (int i = 0; i < lineLength; i++)
-                sb.append("-");
-            sb.append("\n");
-        }
+        if (lines.size() > 0)
+            sb.append("-".repeat(lineLength)).append("\n");
+
         // footer
         for (int i = 0; i < footer.length; i++)
             appendFormatted(sb, footer[i], align[i], width[i]);
@@ -122,18 +114,22 @@ public class ShoppingCart {
      * @param align -1 for align left, 0 for center and +1 for align right.
      */
     public static void appendFormatted(StringBuilder sb, String value, int align, int width){
-        if (value.length() > width)
-            value = value.substring(0,width);
-        int before = (align == 0)
-                ? (width - value.length()) / 2
-                : (align == -1) ? 0 : width - value.length();
-        int after = width - value.length() - before;
-        while (before-- > 0)
-            sb.append(" ");
+        if (value.length() > width) {
+            sb.append(value, 0, width).append(' ');
+            return;
+        }
+
+        int before = 0, after;
+
+        if (align == 0) before = (width - value.length()) / 2;
+        else if (align == 1) before = width - value.length();
+
+        after = width - value.length() - before;
+
+        while (before-- > 0) sb.append(" ");
         sb.append(value);
-        while (after-- > 0)
-            sb.append(" ");
-        sb.append(" ");
+
+        while (after-- >= 0) sb.append(" ");
     }
     /**
      * Calculates item's discount.
@@ -146,25 +142,16 @@ public class ShoppingCart {
     public static int calculateDiscount(ItemType type, int quantity){
         int discount = 0;
         switch (type) {
-            case NEW:
-                return 0;
-            case REGULAR:
-                discount = 0;
+            case NEW: return 0;
+            case REGULAR: discount = 0;
                 break;
-            case SECOND_FREE:
-                if (quantity > 1)
-                    discount = 50;
+            case SECOND_FREE: if (quantity > 1) discount = 50;
                 break;
-            case SALE:
-                discount = 70;
+            case SALE: discount = 70;
                 break;
         }
-        if (discount < 80) {
-            discount += quantity / 10;
-            if (discount > 80)
-                discount = 80;
-        }
-        return discount;
+        discount += quantity / 10;
+        return Math.min(discount, 80);
     }
     /** item info */
     private static class Item{
