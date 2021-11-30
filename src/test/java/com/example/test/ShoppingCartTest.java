@@ -1,23 +1,12 @@
 package com.example.test;
 
 import com.example.ShoppingCart;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.example.ShoppingCart.ItemType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShoppingCartTest {
-
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void appendFormatted() {
         StringBuilder builder;
