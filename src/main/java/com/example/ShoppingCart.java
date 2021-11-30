@@ -6,7 +6,12 @@ import java.text.*;
  * Containing items and calculating price.
  */
 public class ShoppingCart {
-    public static enum ItemType { NEW, REGULAR, SECOND_FREE, SALE };
+
+    public enum ItemType {NEW, REGULAR, SECOND_FREE, SALE}
+
+    private List<Item> items = new LinkedList<>();
+    private static final NumberFormat MONEY = new DecimalFormat("$#.00", new DecimalFormatSymbols(Locale.ENGLISH));
+
     /**
      * Tests all class methods.
      */
@@ -123,13 +128,6 @@ public class ShoppingCart {
             appendFormatted(sb, footer[i], align[i], width[i]);
         return sb.toString();
     }
-    // --- private section -----------------------------------------------------
-    private static final NumberFormat MONEY;
-    static {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-        symbols.setDecimalSeparator('.');
-        MONEY = new DecimalFormat("$#.00", symbols);
-    }
     /**
      * Appends to sb formatted value.
      * Trims string if its length > width.
@@ -187,6 +185,4 @@ public class ShoppingCart {
         int quantity;
         ItemType type;
     }
-    /** Container for added items */
-    private List<Item> items = new ArrayList<Item>();
 }
