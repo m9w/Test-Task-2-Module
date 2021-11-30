@@ -1,5 +1,6 @@
 package com.example.test;
 
+import com.example.FormatTable;
 import com.example.ShoppingCart;
 import org.junit.jupiter.api.Test;
 
@@ -12,12 +13,8 @@ class ShoppingCartTest {
         StringBuilder builder;
         String[] exp = new String[]{"12"+" ".repeat(29), " ".repeat(14)+"12" + " ".repeat(15), " ".repeat(28)+"12 "};
         for (int i = -1; i <= 1; i++) {
-            builder = new StringBuilder();
-            ShoppingCart.appendFormatted(builder, "12", i,30);
-            assertEquals(exp[i+1], builder.toString(), i+" " + exp[0]);
-            builder = new StringBuilder();
-            ShoppingCart.appendFormatted(builder, "12".repeat(20), i, 30);
-            assertEquals("12".repeat(15) + " ", builder.toString());
+            assertEquals(exp[i+1], FormatTable.appendFormatted("12", i,30));
+            assertEquals("12".repeat(15) + " ", FormatTable.appendFormatted( "12".repeat(20), i, 30));
         }
     }
 
